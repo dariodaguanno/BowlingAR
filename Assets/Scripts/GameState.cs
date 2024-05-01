@@ -26,4 +26,11 @@ public class GameState : ScriptableObject {
         get => currentGameState;
         set => currentGameState = value;
     }
+
+    [SerializeField] private int score = 0;
+
+    public int Score {
+        get => score;
+        set => score = value;
+    }
 }
