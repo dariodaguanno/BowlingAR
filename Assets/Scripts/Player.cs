@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
 
     [SerializeField] GameState gameState;
 
+    private void Awake() {
+        gameState.ResetState();
+        gameState.CurrentGameState = GameState.GameStateEnum.PlacingPinDeckAndLane;
+    }
+
     private void Start() {
         BallInitialSetup();
     }
