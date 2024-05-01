@@ -15,13 +15,21 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject controlsPanel_1;
     [SerializeField] private GameObject controlsPanel_2;
 
+    [SerializeField] private TMP_Text remainingBallsUI;
+
+    [SerializeField] private GameObject strikePanel;
+
     void UpdateScoreUI(int newScore) {
         scoreUI.text = $"{newScore}";
     }
 
+    void UpdateAmountOfBallsUI() {
+        remainingBallsUI.text = $"{gameState.RemainingBalls}";
+    }
+
     public void ShowNextTurnUI() {
-        //UNCOMMENT
-        //strikePanel.SetActive(false);
+        
+        strikePanel.SetActive(false);
 
         StartCoroutine(ShowNextTurnRoutine());
     }
@@ -29,9 +37,7 @@ public class UIController : MonoBehaviour
     IEnumerator ShowNextTurnRoutine() {
 
         Debug.Log("Show next turn");
-
-        //UNCOMMENT
-        /*
+        
         gameState.CurrentTurn++;
 
         if (gameState.CurrentTurn <= gameState.MaxTurns) {
@@ -46,8 +52,13 @@ public class UIController : MonoBehaviour
         else {
             gameState.CurrentGameState = GameState.GameStateEnum.GameEnded;
         }
-        */
+        
         yield return new WaitForSeconds(turnWaitTime);
 
     }
+
+    public void ShowStrikeUI() {
+        strikePanel.SetActive(true);
+    }
+
 }
