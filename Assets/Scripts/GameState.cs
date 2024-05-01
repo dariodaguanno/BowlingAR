@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 public class GameState : ScriptableObject { 
     
     public enum GameStateEnum {
-
         TitleScreen,
         PlacingPinDeckAndLane,
         SetupBalls,
@@ -19,7 +18,6 @@ public class GameState : ScriptableObject {
         TurnEnd,
         ResettingDeck,
         GameEnded
-
     }
 
     [SerializeField] private GameStateEnum currentGameState;
@@ -37,9 +35,14 @@ public class GameState : ScriptableObject {
     [SerializeField] private int strikeExtraPoints = 10;
     [SerializeField] private float throwPowerMultiplier = 0.05f;
 
+    [HideInInspector] public UnityEvent<int> OnScoreChanged;
+
     public int Score {
         get => score;
-        set => score = value;
+        set {
+            score = value;
+            OnScoreChanged?.Invoke(score);
+        }
     }
 
     public int RemainingBalls {
