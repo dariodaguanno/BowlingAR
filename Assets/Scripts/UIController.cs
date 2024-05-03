@@ -18,6 +18,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_Text remainingBallsUI;
 
     [SerializeField] private GameObject strikePanel;
+    [SerializeField] private GameObject gameOverScreen;
 
     void UpdateScoreUI(int newScore) {
         scoreUI.text = $"{newScore}";
@@ -59,6 +60,11 @@ public class UIController : MonoBehaviour
 
     public void ShowStrikeUI() {
         strikePanel.SetActive(true);
+    }
+
+    public void ShowGameOverScreen() {
+        strikePanel.SetActive(false);
+        gameOverScreen.SetActive(true);
     }
 
 }
