@@ -20,12 +20,27 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject strikePanel;
     [SerializeField] private GameObject gameOverScreen;
 
+    [SerializeField] private bool throwInstructionShowed = false;
+
+
     void UpdateScoreUI(int newScore) {
         scoreUI.text = $"{newScore}";
     }
 
     void UpdateAmountOfBallsUI() {
         remainingBallsUI.text = $"{gameState.RemainingBalls}";
+    }
+
+    private void OnEnable() {
+        gameState.OnScoreChanged.AddListener(UpdateScoreUI);
+        gameState.OnEnterBallSetup.AddListener(HidePlaceInDeckPanel);
+        gameState.OnBallInPlay.AddListener(UpdateAmountOfBallsUI);
+    }
+
+    private void OnDisable() {
+        gameState.OnScoreChanged.RemoveListener(UpdateScoreUI);
+        gameState.OnEnterBallSetup.RemoveListener(HidePlaceInDeckPanel);
+        gameState.OnBallInPlay.RemoveListener(UpdateAmountOfBallsUI);
     }
 
     public void ShowNextTurnUI() {
@@ -65,6 +80,33 @@ public class UIController : MonoBehaviour
     public void ShowGameOverScreen() {
         strikePanel.SetActive(false);
         gameOverScreen.SetActive(true);
+    }
+
+    void HidePlaceInDeckPanel() {
+        // hide place pin panel and show control instructions
+        placePinDeckPanel.SetActive(false);
+
+        ShowControls();
+    }
+
+    private void ShowControls() {
+        if (throwInstructionShowed) return;
+
+        throwInstructionShowed = true;
+        controlsPanel_1.SetActive(true);
+
+        Invoke("HideControls_1", 3);
+    }
+
+    void HideControls_1() {
+        controlsPanel_1.SetActive(false);
+        controlsPanel_2.SetActive(true);
+
+        Invoke("HideControls_2", 3);
+    }
+
+    void HideControls_2() {
+        controlsPanel_2.SetActive(false);
     }
 
 }

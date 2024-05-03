@@ -274,7 +274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &121950004
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1029,6 +1029,7 @@ MonoBehaviour:
   remainingBallsUI: {fileID: 2114365019}
   strikePanel: {fileID: 483239487}
   gameOverScreen: {fileID: 713046321}
+  throwInstructionShowed: 0
 --- !u!1 &403431321
 GameObject:
   m_ObjectHideFlags: 0
@@ -1976,7 +1977,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &713046322
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2688,6 +2689,7 @@ MonoBehaviour:
   pinDeckPrefab: {fileID: 6571257712268296447, guid: 55190952a8ed6e046aaad8b147dc6b96,
     type: 3}
   planeFinder: {fileID: 224212568}
+  gameState: {fileID: 11400000, guid: ea6dc44d744c2924495fb1c773e25bef, type: 2}
 --- !u!4 &1840645739
 Transform:
   m_ObjectHideFlags: 0
