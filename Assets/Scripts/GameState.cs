@@ -75,4 +75,8 @@ public class GameState : ScriptableObject {
         score = 0;
         remainingBalls = MaxTurns;
     }
+
+    public void LoadNewScene(string sceneName) {
+        SceneManager.LoadScene(sceneName);
+    }
 }
