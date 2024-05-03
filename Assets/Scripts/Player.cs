@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     [SerializeField] GameState gameState;
 
     private void Awake() {
+
+        gameState.OnEnterBallSetup.AddListener(EnableSelf);
+
         gameState.ResetState();
         gameState.CurrentGameState = GameState.GameStateEnum.PlacingPinDeckAndLane;
     }
@@ -27,19 +30,54 @@ public class Player : MonoBehaviour
 
     private void Update() {
 
-        DetectScreenSwipe();
+        switch (gameState.CurrentGameState) {
+            case GameState.GameStateEnum.ReadyToThrow:
+                // track touch to throw, device only
+                DetectScreenSwipe();
 
 #if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(1)) {
-
-            ThrowBall();
-            Debug.Log("Right button pressed. ThrowBall() called");
-        }
+                // desktop editor only, track mouse button to throw
+                if (Input.GetMouseButtonDown(1)) ThrowBall();
 #endif
+                break;
+
+            case GameState.GameStateEnum.BallInPlay:
+                // if the ball falls below -20, you have ended the play
+                if (currentBall.transform.position.y < -20) {
+                    Debug.Log("PLAYER PLAY END!");
+
+                    // reset ball
+                    currentBall.transform.position = new Vector3(0, 1000, 0);
+                    currentBall.transform.rotation = Quaternion.identity;
+
+                    // reset rigidbody force
+                    Rigidbody rb = currentBall.GetComponent<Rigidbody>();
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.useGravity = false;
+
+                    // ball has been thrown, set ball play end state
+                    gameState.CurrentGameState = GameState.GameStateEnum.BallPlayEnd;
+                }
+                break;
+        }
+    }
+
+    private void OnEnable() {
+        BallInitialSetup();
+    }
+
+    private void OnDisable() {
+        gameState.OnEnterBallSetup.RemoveListener(EnableSelf);
+    }
+
+    void EnableSelf() {
+        enabled = true;
     }
 
     private void BallInitialSetup() {
         currentBall = Instantiate(ballPrefab, new Vector3(0, 1000, 0), Quaternion.identity);
+        gameState.CurrentGameState = GameState.GameStateEnum.ReadyToThrow;
     }
 
     private void DetectScreenSwipe() {
@@ -93,5 +131,8 @@ public class Player : MonoBehaviour
         Vector3 forceVector = currentBall.transform.forward * (ySwipeDelta * throwPowerMultiplier);
 
         currentBall.GetComponent<Rigidbody>().AddForce(forceVector, ForceMode.Impulse);
+
+        gameState.RemainingBalls--;
+        gameState.CurrentGameState = GameState.GameStateEnum.BallInPlay;
     }
 }

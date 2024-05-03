@@ -10,6 +10,8 @@ public class PinDeckController : MonoBehaviour {
     [SerializeField] private GameObject pinDeckPrefab;
     [SerializeField] private PlaneFinderBehaviour planeFinder;
 
+    [SerializeField] private GameState gameState;
+
     private GameObject pinDeckClone;
     private Transform pinDeckSpawnPoint;
 
@@ -41,6 +43,14 @@ public class PinDeckController : MonoBehaviour {
 #endif
     }
 
+    void OnEnable() {
+        gameState.OnBallPlayEnd.AddListener(StartBallPlayEnded);
+    }
+
+    void OnDisable() {
+        gameState.OnBallPlayEnd.RemoveListener(StartBallPlayEnded);    
+    }
+
     public void CreatePinDeck() {
         StartCoroutine(SetupBowlingLaneRoutine());
     }
@@ -66,5 +76,20 @@ public class PinDeckController : MonoBehaviour {
         pinDeckClone = Instantiate(pinDeckPrefab, pinDeckSpawnPoint.position, pinDeckSpawnPoint.rotation);
 
         yield return new WaitForSeconds(1);
+
+        gameState.CurrentGameState = GameState.GameStateEnum.SetupBalls;
+    }
+
+    void StartBallPlayEnded() {
+        Debug.Log("BallPlayEnded()");
+
+        StartCoroutine(BallPlayEnded());
+    }
+
+    IEnumerator BallPlayEnded() {
+        yield return new WaitForSeconds(2);
+
+        gameState.CurrentGameState = GameState.GameStateEnum.TurnEnd;
+
     }
 }

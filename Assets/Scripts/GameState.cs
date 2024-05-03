@@ -5,8 +5,8 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 [CreateAssetMenu(fileName = "GameState", menuName = "ScriptableObjects/CreateGameStateAsset")]
-public class GameState : ScriptableObject { 
-    
+public class GameState : ScriptableObject {
+
     public enum GameStateEnum {
         TitleScreen,
         PlacingPinDeckAndLane,
@@ -20,13 +20,6 @@ public class GameState : ScriptableObject {
         GameEnded
     }
 
-    [SerializeField] private GameStateEnum currentGameState;
-
-    public GameStateEnum CurrentGameState {
-        get => currentGameState;
-        set => currentGameState = value;
-    }
-
     [SerializeField] private int score = 0;
     [SerializeField] private int remainingBalls = 0;
     [SerializeField] private int currentTurn = 0;
@@ -36,6 +29,46 @@ public class GameState : ScriptableObject {
     [SerializeField] private float throwPowerMultiplier = 0.05f;
 
     [HideInInspector] public UnityEvent<int> OnScoreChanged;
+    [HideInInspector] public UnityEvent OnEnterBallSetup;
+    [HideInInspector] public UnityEvent OnReadyToThrow;
+    [HideInInspector] public UnityEvent OnBallInPlay;
+    [HideInInspector] public UnityEvent OnBallPlayEnd;
+    [HideInInspector] public UnityEvent OnStrikeAchieved;
+    [HideInInspector] public UnityEvent OnResettingDeck;
+    [HideInInspector] public UnityEvent OnGameEnded;
+
+    [SerializeField] private GameStateEnum currentGameState;
+
+    public GameStateEnum CurrentGameState {
+        get => currentGameState;
+        set {
+            currentGameState = value;
+
+            switch (value) {
+                case GameStateEnum.SetupBalls:
+                    OnEnterBallSetup?.Invoke();
+                    break;
+                case GameStateEnum.ReadyToThrow:
+                    OnReadyToThrow?.Invoke();
+                    break;
+                case GameStateEnum.BallInPlay:
+                    OnBallInPlay?.Invoke();
+                    break;
+                case GameStateEnum.BallPlayEnd:
+                    OnBallPlayEnd?.Invoke();
+                    break;
+                case GameStateEnum.StrikeAchieved:
+                    OnStrikeAchieved?.Invoke();
+                    break;
+                case GameStateEnum.ResettingDeck:
+                    OnResettingDeck?.Invoke();
+                    break;
+                case GameStateEnum.GameEnded:
+                    OnGameEnded?.Invoke();
+                    break;
+            }
+        }
+    }
 
     public int Score {
         get => score;
