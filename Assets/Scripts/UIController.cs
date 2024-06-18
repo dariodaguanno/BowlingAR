@@ -22,6 +22,14 @@ public class UIController : MonoBehaviour
 
     [SerializeField] private bool throwInstructionShowed = false;
 
+    private void Start() {
+        placePinDeckPanel.SetActive(true);
+
+        // update HUD score and balls
+        UpdateAmountOfBallsUI();
+        UpdateScoreUI(0);
+    }
+
 
     void UpdateScoreUI(int newScore) {
         scoreUI.text = $"{newScore}";
@@ -35,6 +43,7 @@ public class UIController : MonoBehaviour
         gameState.OnScoreChanged.AddListener(UpdateScoreUI);
         gameState.OnEnterBallSetup.AddListener(HidePlaceInDeckPanel);
         gameState.OnBallInPlay.AddListener(UpdateAmountOfBallsUI);
+        gameState.OnTurnEnded.AddListener(ShowNextTurnUI);
     }
 
     private void OnDisable() {
@@ -68,9 +77,6 @@ public class UIController : MonoBehaviour
         else {
             gameState.CurrentGameState = GameState.GameStateEnum.GameEnded;
         }
-        
-        yield return new WaitForSeconds(turnWaitTime);
-
     }
 
     public void ShowStrikeUI() {
@@ -108,5 +114,4 @@ public class UIController : MonoBehaviour
     void HideControls_2() {
         controlsPanel_2.SetActive(false);
     }
-
 }

@@ -45,10 +45,12 @@ public class PinDeckController : MonoBehaviour {
 
     void OnEnable() {
         gameState.OnBallPlayEnd.AddListener(StartBallPlayEnded);
+        gameState.OnResettingDeck.AddListener(StartPlaceNewDeckOnLane);
     }
 
     void OnDisable() {
-        gameState.OnBallPlayEnd.RemoveListener(StartBallPlayEnded);    
+        gameState.OnBallPlayEnd.RemoveListener(StartBallPlayEnded);
+        gameState.OnResettingDeck.RemoveListener(StartPlaceNewDeckOnLane);
     }
 
     public void CreatePinDeck() {
@@ -91,5 +93,17 @@ public class PinDeckController : MonoBehaviour {
 
         gameState.CurrentGameState = GameState.GameStateEnum.TurnEnd;
 
+    }
+
+    void StartPlaceNewDeckOnLane() {
+        Debug.Log("PLACE NEW DECK ON LANE");
+
+        StartCoroutine(PlaceNewDeckOnLane());
+    }
+
+    IEnumerator PlaceNewDeckOnLane() {
+        yield return new WaitForSeconds(2);
+
+        gameState.CurrentGameState = GameState.GameStateEnum.ReadyToThrow;
     }
 }

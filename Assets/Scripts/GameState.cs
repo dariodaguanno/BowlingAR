@@ -35,6 +35,7 @@ public class GameState : ScriptableObject {
     [HideInInspector] public UnityEvent OnBallPlayEnd;
     [HideInInspector] public UnityEvent OnStrikeAchieved;
     [HideInInspector] public UnityEvent OnResettingDeck;
+    [HideInInspector] public UnityEvent OnTurnEnded;
     [HideInInspector] public UnityEvent OnGameEnded;
 
     [SerializeField] private GameStateEnum currentGameState;
@@ -62,6 +63,9 @@ public class GameState : ScriptableObject {
                     break;
                 case GameStateEnum.ResettingDeck:
                     OnResettingDeck?.Invoke();
+                    break;
+                case GameStateEnum.TurnEnd:
+                    OnTurnEnded?.Invoke();
                     break;
                 case GameStateEnum.GameEnded:
                     OnGameEnded?.Invoke();
